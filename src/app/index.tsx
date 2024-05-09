@@ -1,20 +1,38 @@
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+	const polls = [1, 2, 3];
+	return (
+		<>
+			<Stack.Screen options={{ title: 'Polls' }} />
+			<FlatList
+				data={polls}
+				contentContainerStyle={styles.container}
+				renderItem={() => (
+					<View style={styles.pollContainer}>
+						<Text style={styles.pollTitle}>Exemple poll question</Text>
+					</View>
+				)}
+			/>
+		</>
+	);
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+	container: {
+		flex: 1,
+		padding: 10,
+		gap: 10,
+	},
+	pollContainer: {
+		backgroundColor: 'white',
+		padding: 10,
+		borderRadius: 5,
+	},
+	pollTitle: {
+		fontWeight: 'bold',
+		fontSize: 16,
+	},
 });
