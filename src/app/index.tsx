@@ -1,6 +1,5 @@
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { Link, Stack } from 'expo-router';
+import { FlatList, StyleSheet, Text } from 'react-native';
 
 export default function App() {
 	const polls = [1, 2, 3];
@@ -11,9 +10,11 @@ export default function App() {
 				data={polls}
 				contentContainerStyle={styles.container}
 				renderItem={() => (
-					<View style={styles.pollContainer}>
+					<Link
+						href={'/polls/details'}
+						style={styles.pollContainer}>
 						<Text style={styles.pollTitle}>Exemple poll question</Text>
-					</View>
+					</Link>
 				)}
 			/>
 		</>
