@@ -2,18 +2,20 @@ import { Link, Stack } from 'expo-router';
 import { FlatList, StyleSheet, Text } from 'react-native';
 
 export default function App() {
-	const polls = [1, 2, 3];
+	const polls = [{ id: 1 }, { id: 2 }, { id: 3 }];
 	return (
 		<>
 			<Stack.Screen options={{ title: 'Polls' }} />
 			<FlatList
 				data={polls}
 				contentContainerStyle={styles.container}
-				renderItem={() => (
+				renderItem={({ item }) => (
 					<Link
-						href={'/polls/details'}
+						href={`/polls/${item.id}`}
 						style={styles.pollContainer}>
-						<Text style={styles.pollTitle}>Exemple poll question</Text>
+						<Text style={styles.pollTitle}>
+							{item.id} : Exemple poll question
+						</Text>
 					</Link>
 				)}
 			/>
