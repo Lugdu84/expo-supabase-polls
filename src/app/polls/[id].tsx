@@ -1,5 +1,7 @@
-import { useLocalSearchParams } from 'expo-router';
-import { View, Text, StyleSheet } from 'react-native';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { View, Text, StyleSheet, Pressable, Button } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import { useState } from 'react';
 
 const poll = {
 	question: 'React Native vs Flutter',
@@ -8,18 +10,34 @@ const poll = {
 
 export default function DetailsPollScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>();
+	const [selected, setSelected] = useState('React Native FTW');
+
+	const handleVote = () => {
+		console.warn('Voted for', selected);
+	};
 	return (
 		<View style={styles.container}>
+			<Stack.Screen options={{ title: 'Poll voting' }} />
 			<Text style={styles.question}>{poll.question}</Text>
 			<View style={{ gap: 5 }}>
 				{poll.options.map((option) => (
-					<View
+					<Pressable
+						onPress={() => setSelected(option)}
 						style={styles.optionContainer}
 						key={option}>
+						<Feather
+							name={option === selected ? 'check-circle' : 'circle'}
+							size={24}
+							color={option === selected ? 'green' : 'gray'}
+						/>
 						<Text>{option}</Text>
-					</View>
+					</Pressable>
 				))}
 			</View>
+			<Button
+				onPress={handleVote}
+				title="Vote"
+			/>
 		</View>
 	);
 }
@@ -37,5 +55,8 @@ const styles = StyleSheet.create({
 		padding: 10,
 		borderRadius: 5,
 		backgroundColor: 'white',
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 10,
 	},
 });
