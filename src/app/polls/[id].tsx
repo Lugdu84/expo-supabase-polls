@@ -1,16 +1,41 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { View, Text, StyleSheet, Pressable, Button } from 'react-native';
+import {
+	View,
+	Text,
+	StyleSheet,
+	Pressable,
+	Button,
+	ActivityIndicator,
+} from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { useState } from 'react';
-
-const poll = {
-	question: 'React Native vs Flutter',
-	options: ['React Native FTW', 'Flutter is the best', 'Both are great'],
-};
+import { useEffect, useState } from 'react';
+import { Poll } from '@/types/types';
+import { supabase } from '@/lib/supabase';
 
 export default function DetailsPollScreen() {
 	const { id } = useLocalSearchParams<{ id: string }>();
-	const [selected, setSelected] = useState('React Native FTW');
+	const [poll, setPoll] = useState<Poll | null>(null);
+	const [selected, setSelected] = useState<string | null>(null);
+
+	useEffect(() => {
+		const fetchPoll = async () => {
+			const { data, error } = await supabase
+				.from('polls')
+				.select('*')
+				.eq('id', String(id))
+				.single();
+			if (error) {
+				console.error('Error fetching poll', error);
+				return;
+			}
+			setPoll(data);
+		};
+		fetchPoll();
+	}, []);
+
+	if (!poll) {
+		return <ActivityIndicator />;
+	}
 
 	const handleVote = () => {
 		console.warn('Voted for', selected);

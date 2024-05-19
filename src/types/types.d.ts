@@ -1,3 +1,3 @@
 import { Tables } from './supabase';
 
-export type Polls = Tables<'polls'>;
+export type Poll = Tables<'polls'>;

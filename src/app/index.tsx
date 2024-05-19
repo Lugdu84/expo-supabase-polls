@@ -3,10 +3,10 @@ import { FlatList, StyleSheet, Text } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Polls } from '@/types/types';
+import { Poll } from '@/types/types';
 
 export default function App() {
-	const [polls, setPolls] = useState<Polls[]>([]);
+	const [polls, setPolls] = useState<Poll[]>([]);
 
 	useEffect(() => {
 		const fetchPolls = async () => {

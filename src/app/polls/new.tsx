@@ -4,17 +4,42 @@ import { Feather } from '@expo/vector-icons';
 import { Redirect, Stack } from 'expo-router';
 import { useState } from 'react';
 import { useAuth } from '@/providers/AuthProvider';
+import { supabase } from '@/lib/supabase';
 
 export default function NewPollScreen() {
 	const [question, setQuestion] = useState('');
 	const [options, setOptions] = useState(['', '']);
+	const [error, setError] = useState('');
 	const { user } = useAuth();
 
 	if (!user) {
 		return <Redirect href={'/login'} />;
 	}
-	const createPoll = () => {
+	const createPoll = async () => {
+		setError('');
+		if (!question) {
+			setError('Question is required');
+			return;
+		}
+
+		if (options.some((option) => !option)) {
+			setError('Please valid at least 2 options');
+			return;
+		}
 		console.warn('Create poll', { question, options });
+		const { data, error } = await supabase
+			.from('polls')
+			.insert({
+				question,
+				options,
+			})
+			.select();
+
+		if (error) {
+			setError(error.message);
+			return;
+		}
+		console.warn('Poll created', data);
 	};
 
 	const addOption = () => {
@@ -72,6 +97,7 @@ export default function NewPollScreen() {
 				onPress={createPoll}
 				title="Create Poll"
 			/>
+			<Text style={{ color: 'red' }}>{error}</Text>
 		</View>
 	);
 }
