@@ -1,9 +1,25 @@
 import { Link, Stack } from 'expo-router';
 import { FlatList, StyleSheet, Text } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
+import { Polls } from '../../types/supabase';
 
 export default function App() {
-	const polls = [{ id: 1 }, { id: 2 }, { id: 3 }];
+	const [polls, setPolls] = useState<Polls[]>([]);
+
+	useEffect(() => {
+		const fetchPolls = async () => {
+			let { data: polls, error } = await supabase.from('polls').select('*');
+			if (!polls) {
+				polls = [];
+			}
+			if (error) console.error('Error fetching polls', error);
+			setPolls(polls);
+		};
+
+		fetchPolls();
+	}, []);
 	return (
 		<>
 			<Stack.Screen
@@ -27,9 +43,7 @@ export default function App() {
 					<Link
 						href={`/polls/${item.id}`}
 						style={styles.pollContainer}>
-						<Text style={styles.pollTitle}>
-							{item.id} : Exemple poll question
-						</Text>
+						<Text style={styles.pollTitle}>{item.question}</Text>
 					</Link>
 				)}
 			/>
