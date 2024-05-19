@@ -27,6 +27,9 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 				data: { session },
 			} = await supabase.auth.getSession();
 			setSession(session);
+			if (!session) {
+				supabase.auth.signInAnonymously();
+			}
 		};
 		fetchSession();
 		supabase.auth.onAuthStateChange((event, session) => {
