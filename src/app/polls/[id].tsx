@@ -9,26 +9,49 @@ import {
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { Poll } from '@/types/types';
+import { Poll, Vote } from '@/types/types';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/providers/AuthProvider';
+
+type NewVote = {
+	option: string;
+	poll_id: number;
+	user_id: string;
+	id?: number;
+};
 
 export default function DetailsPollScreen() {
+	const { user } = useAuth();
 	const { id } = useLocalSearchParams<{ id: string }>();
 	const [poll, setPoll] = useState<Poll | null>(null);
-	const [selected, setSelected] = useState<string | null>(null);
+	const [userVote, setUserVote] = useState<Vote | null>(null);
+	const [selected, setSelected] = useState('');
 
 	useEffect(() => {
 		const fetchPoll = async () => {
 			const { data, error } = await supabase
 				.from('polls')
 				.select('*')
-				.eq('id', String(id))
+				.eq('id', Number.parseInt(id!))
 				.single();
 			if (error) {
 				console.error('Error fetching poll', error);
 				return;
 			}
+
+			// fetch user vote
+			const { data: votes } = await supabase
+				.from('votes')
+				.select('*')
+				.eq('poll_id', Number.parseInt(id!))
+				.eq('user_id', user!.id)
+				.single();
+
+			if (votes) {
+				setSelected(votes.option);
+			}
 			setPoll(data);
+			setUserVote(votes);
 		};
 		fetchPoll();
 	}, []);
@@ -37,7 +60,20 @@ export default function DetailsPollScreen() {
 		return <ActivityIndicator />;
 	}
 
-	const handleVote = () => {
+	const handleVote = async () => {
+		const newVote: NewVote = {
+			option: selected,
+			poll_id: poll.id,
+			user_id: user!.id,
+		};
+		if (userVote) {
+			newVote.id = userVote.id;
+		}
+		const { error } = await supabase.from('votes').upsert(newVote).select();
+		if (error) {
+			console.error('Error voting', error);
+			return;
+		}
 		console.warn('Voted for', selected);
 	};
 	return (
