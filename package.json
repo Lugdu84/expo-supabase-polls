@@ -7,7 +7,7 @@
 		"android": "expo start --android",
 		"ios": "expo start --ios",
 		"web": "expo start --web",
-		"gen-types": "supabase gen types typescript --linked > types/supabase.d.ts"
+		"gen-types": "supabase gen types typescript --linked > src/types/supabase.d.ts"
 	},
 	"dependencies": {
 		"@react-native-async-storage/async-storage": "1.23.1",
