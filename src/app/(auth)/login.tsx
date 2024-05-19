@@ -9,6 +9,7 @@ import {
 	Text,
 } from 'react-native';
 import { supabase } from '@/lib/supabase';
+import { Stack } from 'expo-router';
 
 AppState.addEventListener('change', (state) => {
 	if (state === 'active') {
@@ -52,6 +53,7 @@ export default function Auth() {
 
 	return (
 		<View style={styles.container}>
+			<Stack.Screen options={{ headerShown: false }} />
 			<Text style={styles.title}>Sign In or Create an account</Text>
 			<View style={[styles.verticallySpaced, styles.mt20]}>
 				<TextInput

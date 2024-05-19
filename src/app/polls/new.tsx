@@ -1,12 +1,18 @@
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
-import { Stack } from 'expo-router';
+import { Redirect, Stack } from 'expo-router';
 import { useState } from 'react';
+import { useAuth } from '@/providers/AuthProvider';
 
 export default function NewPollScreen() {
 	const [question, setQuestion] = useState('');
 	const [options, setOptions] = useState(['', '']);
+	const { user } = useAuth();
+
+	if (!user) {
+		return <Redirect href={'/login'} />;
+	}
 	const createPoll = () => {
 		console.warn('Create poll', { question, options });
 	};
