@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase';
-import { Session } from '@supabase/supabase-js';
+import { Session, User } from '@supabase/supabase-js';
 import {
 	PropsWithChildren,
 	createContext,
@@ -10,10 +10,12 @@ import {
 
 type AuthData = {
 	session: Session | null;
+	user: User | undefined;
 };
 
 const AuthContext = createContext<AuthData>({
 	session: null,
+	user: undefined,
 });
 
 export default function AuthProvider({ children }: PropsWithChildren) {
@@ -33,7 +35,9 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 	}, []);
 
 	return (
-		<AuthContext.Provider value={{ session }}>{children}</AuthContext.Provider>
+		<AuthContext.Provider value={{ session, user: session?.user }}>
+			{children}
+		</AuthContext.Provider>
 	);
 }
 
