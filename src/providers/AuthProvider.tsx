@@ -11,11 +11,13 @@ import {
 type AuthData = {
 	session: Session | null;
 	user: User | undefined;
+	isAuthenticated: boolean;
 };
 
 const AuthContext = createContext<AuthData>({
 	session: null,
 	user: undefined,
+	isAuthenticated: false,
 });
 
 export default function AuthProvider({ children }: PropsWithChildren) {
@@ -38,7 +40,12 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 	}, []);
 
 	return (
-		<AuthContext.Provider value={{ session, user: session?.user }}>
+		<AuthContext.Provider
+			value={{
+				session,
+				user: session?.user,
+				isAuthenticated: !!session?.user && !session.user.is_anonymous,
+			}}>
 			{children}
 		</AuthContext.Provider>
 	);

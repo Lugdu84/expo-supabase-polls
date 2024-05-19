@@ -10,9 +10,9 @@ export default function NewPollScreen() {
 	const [question, setQuestion] = useState('');
 	const [options, setOptions] = useState(['', '']);
 	const [error, setError] = useState('');
-	const { user } = useAuth();
+	const { isAuthenticated } = useAuth();
 
-	if (!user) {
+	if (!isAuthenticated) {
 		return <Redirect href={'/login'} />;
 	}
 	const createPoll = async () => {
