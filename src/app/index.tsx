@@ -34,6 +34,15 @@ export default function App() {
 							/>
 						</Link>
 					),
+					headerLeft: () => (
+						<Link href={'/profile'}>
+							<AntDesign
+								name="user"
+								size={24}
+								color="gray"
+							/>
+						</Link>
+					),
 				}}
 			/>
 			<FlatList
